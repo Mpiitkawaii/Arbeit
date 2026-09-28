@@ -108,7 +108,19 @@
         .explanation strong {
             color: #1e7e34;
         }
+        /* Style untuk opsi jawaban benar & salah */
+.options-list label.correct-opt {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724 !important;
+    font-weight: bold;
+}
 
+.options-list label.incorrect-opt {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24 !important;
+}
         /* C-Test Styling */
         .ctest-container {
             line-height: 2.2;
@@ -203,6 +215,7 @@
         .c-test-explanation th {
             background-color: #eef2f5;
         }
+        
     </style>
 </head>
 <body>
@@ -558,15 +571,35 @@ renderQuestions(grammarData, 'grammarQuestions', 'g');
 
 // Check Functions
 function checkVocab() {
+function checkVocab() {
     let score = 0;
     vocabData.forEach((q, idx) => {
         const selected = document.querySelector(`input[name="v_q${idx}"]:checked`);
         const expDiv = document.getElementById(`v_exp_${idx}`);
+        const inputs = document.querySelectorAll(`input[name="v_q${idx}"]`);
+        
+        // Reset warna label terlebih dahulu
+        inputs.forEach(input => {
+            const label = input.closest('label');
+            label.classList.remove('correct-opt', 'incorrect-opt');
+            
+            // Beri warna HIJAU pada jawaban yang benar
+            if (input.value === q.ans) {
+                label.classList.add('correct-opt');
+            }
+            
+            // Beri warna MERAH pada jawaban salah yang dipilih pengguna
+            if (selected && selected.value !== q.ans && input.checked) {
+                label.classList.add('incorrect-opt');
+            }
+        });
+
         expDiv.style.display = "block";
         if (selected && selected.value === q.ans) {
             score++;
         }
     });
+
     const res = document.getElementById('vocabResult');
     res.style.display = "block";
     res.style.backgroundColor = "#d4edda";
@@ -579,11 +612,30 @@ function checkGrammar() {
     grammarData.forEach((q, idx) => {
         const selected = document.querySelector(`input[name="g_q${idx}"]:checked`);
         const expDiv = document.getElementById(`g_exp_${idx}`);
+        const inputs = document.querySelectorAll(`input[name="g_q${idx}"]`);
+        
+        // Reset warna label terlebih dahulu
+        inputs.forEach(input => {
+            const label = input.closest('label');
+            label.classList.remove('correct-opt', 'incorrect-opt');
+            
+            // Beri warna HIJAU pada jawaban yang benar
+            if (input.value === q.ans) {
+                label.classList.add('correct-opt');
+            }
+            
+            // Beri warna MERAH pada jawaban salah yang dipilih pengguna
+            if (selected && selected.value !== q.ans && input.checked) {
+                label.classList.add('incorrect-opt');
+            }
+        });
+
         expDiv.style.display = "block";
         if (selected && selected.value === q.ans) {
             score++;
         }
     });
+
     const res = document.getElementById('grammarResult');
     res.style.display = "block";
     res.style.backgroundColor = "#d4edda";
