@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutsch Quiz & C-Test: Die erste Woche im Büro</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #27ae60;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            background-color: #eef2f5;
+            padding: 12px 20px;
+            border-left: 5px solid var(--primary-color);
+            margin-top: 40px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .question-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .question-card blockquote {
+            background-color: #f1f8ff;
+            border-left: 4px solid #0366d6;
+            margin: 10px 0;
+            padding: 10px 15px;
+            font-style: italic;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .options-list li {
+            margin-bottom: 10px;
+        }
+
+        .options-list label {
+            display: block;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .options-list label:hover {
+            background-color: #f0f4f8;
+        }
+
+        .options-list input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 15px;
+            background-color: #eef9f1;
+            border-left: 4px solid var(--accent-color);
+            font-size: 0.95em;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .explanation strong {
+            color: #1e7e34;
+        }
+
+        /* C-Test Styling */
+        .ctest-container {
+            line-height: 2.2;
+            font-size: 1.1em;
+            background: #fff9e6;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #ffeba8;
+        }
+
+        .ctest-input {
+            width: 75px;
+            padding: 4px 8px;
+            font-size: 1em;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .ctest-input.correct {
+            border-color: #27ae60;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .ctest-input.incorrect {
+            border-color: #e74c3c;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #1a252f;
+        }
+
+        .btn-download {
+            background-color: #e67e22;
+        }
+
+        .btn-download:hover {
+            background-color: #d35400;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .c-test-explanation {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f4f6f9;
+            border-radius: 8px;
+            border: 1px solid #dcdfe6;
+        }
+
+        .c-test-explanation table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .c-test-explanation th, .c-test-explanation td {
+            border: 1px solid #dcdfe6;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .c-test-explanation th {
+            background-color: #eef2f5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🇩🇪 Deutsch Lernen: Büroalltag</h1>
+
+    <!-- SEKSI KOSAKATA -->
+    <div class="section-title">
+        <h2>Part 1: Quiz Kosakata (B1 - B2)</h2>
+    </div>
+    <form id="vocabForm">
+        <div id="vocabQuestions"></div>
+        <button type="button" class="btn" onclick="checkVocab()">Periksa Jawaban Kosakata</button>
+    </form>
+    <div id="vocabResult" class="result-box"></div>
+
+    <!-- SEKSI GRAMMATIK -->
+    <div class="section-title">
+        <h2>Part 2: Quiz Grammatik (B1 - B2)</h2>
+    </div>
+    <form id="grammarForm">
+        <div id="grammarQuestions"></div>
+        <button type="button" class="btn" onclick="checkGrammar()">Periksa Jawaban Grammatik</button>
+    </form>
+    <div id="grammarResult" class="result-box"></div>
+
+    <!-- SEKSI C-TEST -->
+    <div class="section-title">
+        <h2>Part 3: C-Test (Ein neuer Alltag im Büro)</h2>
+    </div>
+    <p><em>Lengkapi bagian kata yang rumpang di bawah ini:</em></p>
+    <div class="ctest-container" id="cTestContent">
+        Am Montag begann meine erste Woche im neuen Büro. Ich war etwas nervös, abe<input type="text" class="ctest-input" data-answer="r" id="ct1"> meine neuen Kollegen waren sehr freundlich. Zuerst zei<input type="text" class="ctest-input" data-answer="gt" id="ct2"> mir meine Chefin den Arbeitsplatz und erklä<input type="text" class="ctest-input" data-answer="rte" id="ct3"> mir, welche Aufgaben ich übernehmen sollte. Danach ler<input type="text" class="ctest-input" data-answer="nte" id="ct4"> ich das Team kennen, mit dem ich in den nächsten Monaten zusamme<input type="text" class="ctest-input" data-answer="narbeiten" id="ct5"> werde. Am Dienstag nah<input type="text" class="ctest-input" data-answer="m" id="ct6"> ich an einer Besprechung teil. Dort wurden einige wichtige Themen bespro<input type="text" class="ctest-input" data-answer="chen" id="ct7">, und ich durfte auch meine Mei<input type="text" class="ctest-input" data-answer="nung" id="ct8"> äußern. Obwohl ich noch wenig Erfa<input type="text" class="ctest-input" data-answer="hrung" id="ct9"> hatte, fühlte ich mich immer siche<input type="text" class="ctest-input" data-answer="rer" id="ct10">. Meine Kollegin half mir, wenn ich etwas nicht vers<input type="text" class="ctest-input" data-answer="tanden" id="ct11"> hatte, und erklärte mir die Arbeits<input type="text" class="ctest-input" data-answer="abläufe" id="ct12">. Am Mittwoch bek<input type="text" class="ctest-input" data-answer="am" id="ct13"> ich meine erste eigene Aufgabe. Ich musste einen kurzen Ber<input type="text" class="ctest-input" data-answer="icht" id="ct14"> schreiben und anschließend an meine Chefin schi<input type="text" class="ctest-input" data-answer="cken" id="ct15">. Zuerst war ich unsicher, aber ich kon<input type="text" class="ctest-input" data-answer="nte" id="ct16"> die Aufgabe rechtzeitig erled<input type="text" class="ctest-input" data-answer="igen" id="ct17">. Am Ende der Woche mer<input type="text" class="ctest-input" data-answer="kte" id="ct18"> ich, dass ein neuer Arbeitsplatz zwar anstrengend sein kann, aber auch viele Mögli<input type="text" class="ctest-input" data-answer="chkeiten" id="ct19"> bietet, neue Erfa<input type="text" class="ctest-input" data-answer="hrungen" id="ct20"> zu sammeln.
+    </div>
+    <button type="button" class="btn" onclick="checkCTest()">Periksa Jawaban C-Test</button>
+    <div id="cTestResult" class="result-box"></div>
+
+    <!-- PENJELASAN C-TEST (Indonesian Explanation) -->
+    <div id="cTestExplanation" class="c-test-explanation">
+        <h3>💡 Kunci Jawaban & Penjelasan C-Test (Bahasa Indonesia)</h3>
+        <p><strong>Teks Utuh:</strong></p>
+        <blockquote style="background: #fff; padding: 15px; border-left: 4px solid #27ae60;">
+            Am Montag begann meine erste Woche im neuen Büro. Ich war etwas nervös, <strong>aber</strong> meine neuen Kollegen waren sehr freundlich. Zuerst <strong>zeigt</strong> mir meine Chefin den Arbeitsplatz und <strong>erklärte</strong> mir, welche Aufgaben ich übernehmen sollte. Danach <strong>lernte</strong> ich das Team kennen, mit dem ich in den nächsten Monaten <strong>zusammenarbeiten</strong> werde. Am Dienstag <strong>nahm</strong> ich an einer Besprechung teil. Dort wurden einige wichtige Themen <strong>besprochen</strong>, und ich durfte auch meine <strong>Meinung</strong> äußern. Obwohl ich noch wenig <strong>Erfahrung</strong> hatte, fühlte ich mich immer <strong>sicherer</strong>. Meine Kollegin half mir, wenn ich etwas nicht <strong>verstanden</strong> hatte, und erklärte mir die <strong>Arbeitsabläufe</strong>. Am Mittwoch <strong>bekam</strong> ich meine erste eigene Aufgabe. Ich musste einen kurzen <strong>Bericht</strong> schreiben und anschließend an meine Chefin <strong>schicken</strong>. Zuerst war ich unsicher, aber ich <strong>konnte</strong> die Aufgabe rechtzeitig <strong>erledigen</strong>. Am Ende der Woche <strong>merkte</strong> ich, dass ein neuer Arbeitsplatz zwar anstrengend sein kann, aber auch viele <strong>Möglichkeiten</strong> bietet, neue <strong>Erfahrungen</strong> zu sammeln.
+        </blockquote>
+
+        <h4>Rincian Kata & Tata Bahasa:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Kata Lengkap</th>
+                    <th>Bagian Diisi</th>
+                    <th>Penjelasan Bahasa Indonesia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>aber</td><td>r</td><td>Kata sambung "tetapi".</td></tr>
+                <tr><td>2</td><td>zeigt</td><td>gt</td><td>Präsens dari <em>zeigen</em> (menunjukkan).</td></tr>
+                <tr><td>3</td><td>erklärte</td><td>rte</td><td>Präteritum dari <em>erklären</em> (menjelaskan).</td></tr>
+                <tr><td>4</td><td>lernte</td><td>nte</td><td>Präteritum dari <em>kennenlernen</em> (mengenal).</td></tr>
+                <tr><td>5</td><td>zusammenarbeiten</td><td>narbeiten</td><td>Infinitiv kata kerja gabungan (bekerja sama).</td></tr>
+                <tr><td>6</td><td>nahm</td><td>m</td><td>Präteritum dari <em>teilnehmen</em> (mengikuti/berpartisipasi).</td></tr>
+                <tr><td>7</td><td>besprochen</td><td>chen</td><td>Partizip II dari <em>besprechen</em> (didiskusikan - bentuk pasif).</td></tr>
+                <tr><td>8</td><td>Meinung</td><td>nung</td><td>Kata benda: <em>die Meinung</em> (pendapat/opini).</td></tr>
+                <tr><td>9</td><td>Erfahrung</td><td>hrung</td><td>Kata benda: <em>die Erfahrung</em> (pengalaman).</td></tr>
+                <tr><td>10</td><td>sicherer</td><td>rer</td><td>Komparativ dari <em>sicher</em> (lebih percaya diri/merasa aman).</td></tr>
+                <tr><td>11</td><td>verstanden</td><td>tanden</td><td>Partizip II dari <em>verstehen</em> (memahami/mengerti).</td></tr>
+                <tr><td>12</td><td>Arbeitsabläufe</td><td>abläufe</td><td>Plural dari <em>der Arbeitsablauf</em> (alur/proses kerja).</td></tr>
+                <tr><td>13</td><td>bekam</td><td>am</td><td>Präteritum dari <em>bekommen</em> (mendapatkan).</td></tr>
+                <tr><td>14</td><td>Bericht</td><td>icht</td><td>Kata benda: <em>der Bericht</em> (laporan).</td></tr>
+                <tr><td>15</td><td>schicken</td><td>ken</td><td>Infinitiv kata kerja (mengirimkan).</td></tr>
+                <tr><td>16</td><td>konnte</td><td>nte</td><td>Präteritum dari modal verb <em>können</em> (dapat/bisa).</td></tr>
+                <tr><td>17</td><td>erledigen</td><td>igen</td><td>Infinitiv kata kerja (menyelesaikan).</td></tr>
+                <tr><td>18</td><td>merkte</td><td>kte</td><td>Präteritum dari <em>bemerken/merken</em> (menyadari).</td></tr>
+                <tr><td>19</td><td>Möglichkeiten</td><td>chkeiten</td><td>Plural dari <em>die Möglichkeit</em> (kesempatan/peluang).</td></tr>
+                <tr><td>20</td><td>Erfahrungen</td><td>hrungen</td><td>Plural dari <em>die Erfahrung</em> (pengalaman-pengalaman).</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// Data Quiz Kosakata
+const vocabData = [
+    {
+        num: 1,
+        word: "übernehmen",
+        context: "Meine Chefin ist heute nicht da, deshalb muss ich ihre Aufgaben übernehmen.",
+        q: "Was bedeutet „übernehmen“ hier?",
+        options: ["A. Aufgaben ablehnen", "B. Aufgaben von jemandem machen", "C. Aufgaben erklären", "D. Aufgaben vergessen"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'übernehmen'</em> berarti mengambil alih/meneruskan tanggung jawab atau tugas dari orang lain."
+    },
+    {
+        num: 2,
+        word: "sich einarbeiten",
+        context: "In den ersten Wochen musste ich mich erst in die neuen Aufgaben einarbeiten.",
+        q: "Was bedeutet „sich einarbeiten“?",
+        options: ["A. neue Kollegen einstellen", "B. sich an eine neue Arbeit gewöhnen und sie lernen", "C. eine Arbeit kündigen", "D. eine Aufgabe delegieren"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'sich einarbeiten'</em> adalah proses menyesuaikan diri dan mempelajari prosedur atau tugas pada pekerjaan baru."
+    },
+    {
+        num: 3,
+        word: "Arbeitsablauf",
+        context: "Die neuen Mitarbeiter müssen zuerst die Arbeitsabläufe im Büro kennenlernen.",
+        q: "Was ist ein „Arbeitsablauf“?",
+        options: ["A. eine Person im Büro", "B. der Ablauf einer Arbeitsaufgabe", "C. ein Arbeitsvertrag", "D. ein Bürogebäude"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'der Arbeitsablauf'</em> merujuk pada alur kerja, urutan proses, atau prosedur penyelesaian tugas di kantor."
+    },
+    {
+        num: 4,
+        word: "sich äußern",
+        context: "Während der Besprechung durfte jeder seine Meinung zu dem Projekt äußern.",
+        q: "Was bedeutet „sich äußern“?",
+        options: ["A. eine Meinung ausdrücken", "B. eine Aufgabe übernehmen", "C. eine Frage vermeiden", "D. eine Besprechung verlassen"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'sich äußern'</em> berarti menyuarakan, menyampaikan, atau mengekspresikan pendapat/opini."
+    },
+    {
+        num: 5,
+        word: "selbstständig",
+        context: "Nach zwei Wochen konnte sie die meisten Aufgaben selbstständig erledigen.",
+        q: "Was bedeutet „selbstständig“?",
+        options: ["A. mit Hilfe anderer", "B. ohne Hilfe anderer", "C. besonders schnell", "D. nur gemeinsam mit anderen"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'selbstständig'</em> berarti mandiri (mampu mengerjakan tugas tanpa bantuan orang lain)."
+    },
+    {
+        num: 6,
+        word: "nachfragen",
+        context: "Wenn ich etwas nicht verstehe, frage ich bei meiner Kollegin nach.",
+        q: "Was bedeutet „nachfragen“?",
+        options: ["A. etwas noch einmal fragen", "B. eine Frage beantworten", "C. eine Aufgabe übernehmen", "D. jemanden anrufen"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'nachfragen'</em> berarti bertanya kembali atau meminta konfirmasi/penjelasan lebih lanjut tentang sesuatu."
+    },
+    {
+        num: 7,
+        word: "rechtzeitig",
+        context: "Zum Glück konnte ich den Bericht rechtzeitig fertigstellen.",
+        q: "Was bedeutet „rechtzeitig“?",
+        options: ["A. viel zu früh", "B. bevor es zu spät ist", "C. nach dem Termin", "D. besonders schnell"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'rechtzeitig'</em> artinya tepat waktu (selesai sebelum batas waktu/tidak terlambat)."
+    },
+    {
+        num: 8,
+        word: "auslösen",
+        context: "Die Frage des Mitarbeiter löste eine lange Diskussion aus.",
+        q: "Was bedeutet „auslösen“ hier?",
+        options: ["A. etwas verhindern", "B. etwas beginnen oder verursachen", "C. etwas erklären", "D. etwas beenden"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'auslösen'</em> berarti memicu, menyebabkan, atau memunculkan terjadinya sesuatu."
+    },
+    {
+        num: 9,
+        word: "sich herausstellen",
+        context: "Später stellte sich heraus, dass das Problem viel einfacher war als gedacht.",
+        q: "Was bedeutet „sich herausstellen“?",
+        options: ["A. etwas wird später als Tatsache erkannt", "B. etwas wird absichtlich versteckt", "C. jemand stellt sich vor", "D. jemand beginnt eine neue Arbeit"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'sich herausstellen'</em> berarti terbukti / terungkap di kemudian hari."
+    },
+    {
+        num: 10,
+        word: "Erfahrungen sammeln",
+        context: "Durch mein Praktikum konnte ich viele Erfahrungen sammeln.",
+        q: "Was bedeutet „Erfahrungen sammeln“?",
+        options: ["A. Erfahrungen vergessen", "B. Erfahrungen gewinnen", "C. Erfahrungen vermeiden", "D. Erfahrungen erklären"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Ungkapan Nomen-Verb-Verbindung <em>'Erfahrungen sammeln'</em> berarti menimba/menambah pengalaman."
+    },
+    {
+        num: 11,
+        word: "anstrengend",
+        context: "Die erste Woche war zwar anstrengend, aber ich habe viel gelernt.",
+        q: "Was bedeutet „anstrengend“?",
+        options: ["A. entspannend", "B. viel Energie erfordernd", "C. langweilig", "D. einfach"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'anstrengend'</em> berarti melelahkan/kurang santai karena membutuhkan banyak tenaga atau pikiran."
+    },
+    {
+        num: 12,
+        word: "Besprechung",
+        context: "Am Dienstag nahm ich an einer wichtigen Besprechung teil.",
+        q: "Was ist eine „Besprechung“?",
+        options: ["A. ein Gespräch über bestimmte Themen bei der Arbeit", "B. eine schriftliche Prüfung", "C. eine Bewerbung", "D. eine Pause"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'die Besprechung'</em> adalah rapat atau diskusi formal mengenai topik pekerjaan tertentu."
+    },
+    {
+        num: 13,
+        word: "sich an etwas gewöhnen",
+        context: "Nach einigen Tagen gewöhnte ich mich an den neuen Arbeitsplatz.",
+        q: "Was bedeutet „sich an etwas gewöhnen“?",
+        options: ["A. etwas vergessen", "B. etwas nach und nach als normal empfinden", "C. etwas ablehnen", "D. etwas verändern"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'sich an etw. gewöhnen'</em> berarti terbiasa / menyesuaikan diri dengan suatu hal secara bertahap."
+    },
+    {
+        num: 14,
+        word: "fertigstellen",
+        context: "Ich musste den Bericht bis Freitag fertigstellen.",
+        q: "Was bedeutet „fertigstellen“?",
+        options: ["A. anfangen", "B. fertig machen", "C. überprüfen", "D. verschieben"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'fertigstellen'</em> berarti merampungkan/menyelesaikan pekerjaan hingga tuntas."
+    },
+    {
+        num: 15,
+        word: "Möglichkeit",
+        context: "Ein Praktikum bietet jungen Menschen die Möglichkeit, Berufserfahrung zu sammeln.",
+        q: "Was bedeutet „Möglichkeit“ hier?",
+        options: ["A. Pflicht", "B. Gelegenheit/Chance", "C. Problem", "D. Entscheidung"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> <em>'die Möglichkeit'</em> dalam konteks ini berarti kesempatan, peluang, atau opsi (Chance/Gelegenheit)."
+    }
+];
+
+// Data Quiz Grammatik
+const grammarData = [
+    {
+        num: 1,
+        title: "Nebensatz mit weil",
+        context: "Ich war nervös, weil ich noch wenig Erfahrung ______.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. hatte", "B. haben", "C. habe", "D. gehabt"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Klausa bawahan <em>'weil'</em> menempatkan kata kerja terkonjugasi di ujung kalimat. Karena kalimat utama menggunakan konteks lampau (<em>war</em>), maka kata kerja yang tepat adalah <em>'hatte'</em> (Präteritum)."
+    },
+    {
+        num: 2,
+        title: "Relativsatz",
+        context: "Das ist die Kollegin, ______ mir bei der Aufgabe geholfen hat.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. die", "B. der", "C. den", "D. dem"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Kata ganti relatif merujuk pada <em>'die Kollegin'</em> (feminine). Di dalam klausa relatif, kata ini berfungsi sebagai **subjek (Nominativ)**, sehingga menggunakan kata ganti <em>'die'</em>."
+    },
+    {
+        num: 3,
+        title: "an + Akkusativ bei „sich gewöhnen“",
+        context: "Ich muss mich noch ______ den neuen Arbeitsplatz gewöhnen.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. mit", "B. für", "C. an", "D. auf"],
+        ans: "C",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Verba tetap (Verben mit Präpositionen): <em>sich gewöhnen + **an** + Akkusativ</em>."
+    },
+    {
+        num: 4,
+        title: "an + Dativ bei „teilnehmen“",
+        context: "Ich habe gestern ______ einer Besprechung teilgenommen.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. an", "B. auf", "C. für", "D. mit"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Preposisi tetap: <em>teilnehmen + **an** + Dativ</em>. Pasangannya adalah <em>an + einer Besprechung</em>."
+    },
+    {
+        num: 5,
+        title: "Modalverb + Infinitiv",
+        context: "Ich ______ die Aufgabe heute selbstständig erledigen.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. kann", "B. kannte", "C. konnte ich", "D. gekonnt"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Posisi ke-2 dalam kalimat pernyataan diisi oleh **Modalverb** terkonjugasi (<em>kann</em> untuk Subjek <em>Ich</em>), dan kata kerja utama berada di akhir dalam bentuk infinitiv (<em>erledigen</em>)."
+    },
+    {
+        num: 6,
+        title: "Perfekt",
+        context: "Ich ______ in dieser Woche viel ______.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. habe / gelernt", "B. bin / gelernt", "C. habe / lernen", "D. werde / gelernt"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Pola Perfekt untuk kata kerja <em>lernen</em> menggunakan Hilfsverb <em>haben</em> (posisi 2) + <em>gelernt</em> (Partizip II di posisi paling akhir)."
+    },
+    {
+        num: 7,
+        title: "Infinitiv mit zu",
+        context: "Ich habe die Möglichkeit, neue Erfahrungen ______.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. sammeln", "B. zu sammeln", "C. gesammelt", "D. sammle"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Konstruksi kata benda (<em>die Möglichkeit haben</em>) diikuti konstruksi infinitif memerlukan partikel <em>'zu'</em> sebelum kata kerja infinitif (<em>zu sammeln</em>)."
+    },
+    {
+        num: 8,
+        title: "Indirekte Frage",
+        context: "Meine Chefin erklärte mir, ______ Aufgaben ich übernehmen sollte.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. welche", "B. welchen", "C. was für", "D. ob welche"],
+        ans: "A",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Kata tanya <em>welche</em> menyesuaikan bentuk **Plural Nominativ/Akkusativ** dari kata <em>die Aufgaben</em>."
+    },
+    {
+        num: 9,
+        title: "obwohl",
+        context: "______ ich noch wenig Erfahrung hatte, konnte ich die Aufgabe erledigen.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. Weil", "B. Obwohl", "C. Deshalb", "D. Trotzdem"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Kata hubung pertentangan (Konzessivsatz) yang mengawali Nebensatz adalah <em>'Obwohl'</em> (Meskipun)."
+    },
+    {
+        num: 10,
+        title: "B1+/B2 — sich herausstellen + dass",
+        context: "Später stellte sich heraus, ______ die Aufgabe schwieriger war als erwartet.",
+        q: "Wählen Sie die richtige Option:",
+        options: ["A. ob", "B. dass", "C. weil", "D. wenn"],
+        ans: "B",
+        exp: "<strong>Penjelasan (Bahasa Indonesia):</strong> Ungkapan <em>'es stellt sich heraus, dass...'</em> selalu menggunakan kata hubung <em>dass</em> untuk memperkenalkan penjelasan klausa informasi fakta."
+    }
+];
+
+// Render Questions
+function renderQuestions(data, containerId, prefix) {
+    const container = document.getElementById(containerId);
+    let html = "";
+    data.forEach((q, idx) => {
+        html += `
+            <div class="question-card" id="${prefix}_card_${idx}">
+                <h4>${q.num}. ${q.word || q.title}</h4>
+                ${q.context ? `<blockquote>"${q.context}"</blockquote>` : ''}
+                <p>${q.q}</p>
+                <ul class="options-list">
+        `;
+        q.options.forEach(opt => {
+            const letter = opt.charAt(0);
+            html += `
+                <li>
+                    <label>
+                        <input type="radio" name="${prefix}_q${idx}" value="${letter}">
+                        ${opt}
+                    </label>
+                </li>
+            `;
+        });
+        html += `
+                </ul>
+                <div class="explanation" id="${prefix}_exp_${idx}">
+                    ${q.exp}
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+renderQuestions(vocabData, 'vocabQuestions', 'v');
+renderQuestions(grammarData, 'grammarQuestions', 'g');
+
+// Check Functions
+function checkVocab() {
+    let score = 0;
+    vocabData.forEach((q, idx) => {
+        const selected = document.querySelector(`input[name="v_q${idx}"]:checked`);
+        const expDiv = document.getElementById(`v_exp_${idx}`);
+        expDiv.style.display = "block";
+        if (selected && selected.value === q.ans) {
+            score++;
+        }
+    });
+    const res = document.getElementById('vocabResult');
+    res.style.display = "block";
+    res.style.backgroundColor = "#d4edda";
+    res.style.color = "#155724";
+    res.innerHTML = `Skor Kosakata Anda: ${score} / ${vocabData.length} (Penjelasan ditunjukkan di setiap nomor)`;
+}
+
+function checkGrammar() {
+    let score = 0;
+    grammarData.forEach((q, idx) => {
+        const selected = document.querySelector(`input[name="g_q${idx}"]:checked`);
+        const expDiv = document.getElementById(`g_exp_${idx}`);
+        expDiv.style.display = "block";
+        if (selected && selected.value === q.ans) {
+            score++;
+        }
+    });
+    const res = document.getElementById('grammarResult');
+    res.style.display = "block";
+    res.style.backgroundColor = "#d4edda";
+    res.style.color = "#155724";
+    res.innerHTML = `Skor Grammatik Anda: ${score} / ${grammarData.length} (Penjelasan ditunjukkan di setiap nomor)`;
+}
+
+function checkCTest() {
+    const inputs = document.querySelectorAll('.ctest-input');
+    let correct = 0;
+    inputs.forEach(input => {
+        const userAns = input.value.trim().toLowerCase();
+        const expected = input.getAttribute('data-answer').toLowerCase();
+        
+        if (userAns === expected) {
+            input.classList.remove('incorrect');
+            input.classList.add('correct');
+            correct++;
+        } else {
+            input.classList.remove('correct');
+            input.classList.add('incorrect');
+        }
+    });
+
+    const res = document.getElementById('cTestResult');
+    res.style.display = "block";
+    res.style.backgroundColor = "#d4edda";
+    res.style.color = "#155724";
+    res.innerHTML = `Skor C-Test Anda: ${correct} / ${inputs.length}`;
+
+    // Tampilkan Penjelasan C-test secara otomatis
+    document.getElementById('cTestExplanation').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
